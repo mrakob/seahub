@@ -315,10 +315,10 @@ if getattr(settings, 'MULTI_TENANCY', False):
         (r'^org/', include('seahub_extra.organizations.urls')),
     )
 
-if getattr(settings, 'ENABLE_SHIB_LOGIN', False):
-    urlpatterns += patterns('',
-        url(r'^shib-login/', shib_login, name="shib_login"),
-    )
+urlpatterns += patterns(
+    '',
+    url(r'^shib-login/', shib_login, name="shib_login"),
+)
 
 if getattr(settings, 'ENABLE_KRB5_LOGIN', False):
     urlpatterns += patterns(

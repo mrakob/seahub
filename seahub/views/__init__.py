@@ -11,6 +11,7 @@ import posixpath
 
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
+from django.conf import settings as dj_settings
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest, Http404, \
     HttpResponseRedirect
@@ -55,6 +56,7 @@ from seahub.utils import render_permission_error, render_error, list_to_string, 
     user_traffic_over_limit, send_perm_audit_msg, get_origin_repo_info, \
     get_max_upload_file_size, is_pro_version, FILE_AUDIT_ENABLED, \
     is_org_repo_creation_allowed
+from seahub.utils.http import is_safe_url
 from seahub.utils.paginator import get_page_range
 from seahub.utils.star import get_dir_starred_files
 from seahub.utils.timeutils import utc_to_local
@@ -1925,7 +1927,15 @@ def image_view(request, filename):
     return response
 
 def shib_login(request):
-    return HttpResponseRedirect(request.GET.get("next",reverse('myhome')))
+    enabled = getattr(dj_settings, 'ENABLE_SHIB_LOGIN', False)
+    if not enabled:
+        raise Http404
+
+    redirect_to = request.GET.get("next", unicode(reverse('myhome')))
+    if not is_safe_url(url=redirect_to, host=request.get_host()):
+        redirect_to = settings.LOGIN_REDIRECT_URL
+
+    return HttpResponseRedirect(redirect_to)
 
 def underscore_template(request, template):
     """Serve underscore template through Django, mainly for I18n.
