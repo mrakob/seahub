@@ -12,10 +12,10 @@ define([
         template: _.template($('#device-item-tmpl').html()),
 
         events: {
-            'mouseenter': 'showAction',
-            'mouseleave': 'hideAction',
+            'mouseenter': 'highlight',
+            'mouseleave': 'rmHighlight',
             'click .unlink-device': 'unlinkDevice',
-            'click .lib-num': 'showSyncedRepos'
+            'click .js-toggle-repos': 'toggleSyncedRepos'
         },
 
         initialize: function() {
@@ -50,29 +50,28 @@ define([
             return this;
         },
 
-        showAction: function() {
+        highlight: function() {
             this.$el.addClass('hl');
             this.$el.find('.op-icon').removeClass('vh');
         },
 
-        hideAction: function() {
+        rmHighlight: function() {
             this.$el.removeClass('hl');
             this.$el.find('.op-icon').addClass('vh');
         },
 
-        showSyncedRepos: function(e) {
+        toggleSyncedRepos: function(e) {
             var $lib_num = $(e.currentTarget);
             var lib_list = $lib_num.next('.lib-list');
             var dir_icon = $lib_num.children('.dir-icon');
 
-            if (lib_list.length > 0) {
                 lib_list.toggleClass('hide');
                 if (lib_list.hasClass('hide')) {
                     dir_icon.removeClass('icon-caret-up').addClass('icon-caret-down');
                 } else {
                     dir_icon.removeClass('icon-caret-down').addClass('icon-caret-up');
                 }
-            }
+
         },
 
         unlinkDevice: function() {
