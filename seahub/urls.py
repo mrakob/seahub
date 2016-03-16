@@ -24,6 +24,7 @@ from seahub.api2.endpoints.upload_links import UploadLinks, UploadLink
 from seahub.api2.endpoints.file import FileView
 from seahub.api2.endpoints.dir import DirView
 from seahub.api2.endpoints.repo_set_password import RepoSetPassword
+from seahub.api2.endpoints.admin.sysinfo import SysInfo
 
 # Uncomment the next two lines to enable the admin:
 #from django.contrib import admin
@@ -185,6 +186,7 @@ urlpatterns = patterns(
     url(r'^api/v2.1/repos/(?P<repo_id>[-0-9-a-f]{36})/file/$', FileView.as_view(), name='api-v2.1-file-view'),
     url(r'^api/v2.1/repos/(?P<repo_id>[-0-9-a-f]{36})/dir/$', DirView.as_view(), name='api-v2.1-dir-view'),
     url(r'^api/v2.1/repos/(?P<repo_id>[-0-9a-f]{36})/set-password/$', RepoSetPassword.as_view(), name="api-v2.1-repo-set-password"),
+    url(r'^api/v2.1/admin/sysinfo/$', SysInfo.as_view(), name='api-v2.1-sysinfo'),
 
     (r'^avatar/', include('seahub.avatar.urls')),
     (r'^notification/', include('seahub.notifications.urls')),
