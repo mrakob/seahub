@@ -3,8 +3,10 @@
 <script type="text/template" id="side-nav-tmpl">
     <h3 class="hd">{% trans "System Admin" %}</h3>
     <ul class="side-tabnav-tabs">
-        <li class="tab <% if (cur_tab == 'shared') { %> tab-cur<% } %>">
+        <li class="tab <% if (cur_tab == 'dashboard') { %> tab-cur<% } %>">
             <a href="{{ SITE_ROOT }}sysadmin/#dashboard/"><span class="sf2-icon-wrench"></span>{% trans "Info" %}</a>
+        </li>
+        <li class="tab <% if (cur_tab == 'devices') { %> tab-cur<% } %>"> <a href="{{ SITE_ROOT }}sysadmin/#admin-all-devices/"><span class="sf2-icon-monitor"></span>{% trans "Devices" %}</a>
         </li>
         <li class="tab">
             <a href="{% url "sys_settings" %}"><span class="sf2-icon-cog2"></span>{% trans "Settings" %}</a>
@@ -98,4 +100,93 @@
         <% } %>
 
     </dl>
+</script>
+
+<script type="text/template" id="admin-devices-tmpl">
+    <div class="hd">
+        <ul class="tab-tabs-nav fleft">
+            <li class="tab <% if (cur_tab == 'devices') { %> ui-state-active <% } %>"><a href="#admin-all-devices/" class="a">{% trans "All" %}</a></li>
+            <li class="tab <% if (cur_tab == 'errors') { %> ui-state-active <% } %>"><a href="#admin-device-errors/" class="a">{% trans "Errors" %}</a></li>
+        </ul>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th width="22%">{% trans "User" %}</th>
+                <th width="15%">{% trans "Platform" %}</th>
+                <th width="18%">{% trans "Device Name" %}</th>
+                <th width="15%">{% trans "IP" %}</th>
+                <th width="15%">{% trans "Last Access" %}</th>
+                <th width="10%">{% trans "# Libraries" %}</th>
+                <th width="5%"></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="paginator">
+        <a class="paginator-previous hide" href="#">{% trans "Previous" %}</a>
+        <a class="paginator-next hide" href="#">{% trans "Next" %}</a>
+    </div>
+    <span class="loading-icon loading-tip"></span>
+    <div class="empty-tips hide">
+        <h2 class="alc">{% trans "You do not have connected devices" %}</h2>
+        <p>{% trans "Your clients (Desktop/Android/iOS) will be listed here." %}</p>
+    </div>
+</script>
+
+<script type="text/template" id="admin-device-item-tmpl">
+    <td><%- user %></td>
+    <td><%- platform %> <%- client_version %></td>
+    <td><%- device_name %></td>
+    <td><%- last_login_ip %></td>
+    <td><time title='<%- time %>'><%- time_from_now %></time></td>
+    <td class="popover-container">
+    </td>
+    <td>
+        <div>
+            <span class="unlink-device op-icon sf2-icon-delete vh" title="{% trans "Unlink" %}"></span>
+        </div>
+    </td>
+</script>
+
+<script type="text/template" id="admin-device-errors-tmpl">
+    <div class="hd">
+        <ul class="tab-tabs-nav fleft">
+            <li class="tab <% if (cur_tab == 'devices') { %> ui-state-active <% } %>"><a href="#admin-all-devices/" class="a">{% trans "All" %}</a></li>
+            <li class="tab <% if (cur_tab == 'errors') { %> ui-state-active <% } %>"><a href="#admin-device-errors/" class="a">{% trans "Errors" %}</a></li>
+        </ul>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th width="15%">{% trans "User" %}</th>
+                <th width="15%">{% trans "IP" %}</th>
+                <th width="15%">{% trans "Device" %}</th>
+                <th width="15%">{% trans "Library" %}</th>
+                <th width="20%">{% trans "Error" %}</th>
+                <th width="20%">{% trans "Time" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div class="empty-tips hide">
+        <h2 class="alc">{% trans "Not library sync errors" %}</h2>
+    </div>
+    <span class="loading-icon loading-tip"></span>
+    <p class="error hide"></p>
+</script>
+
+<script type="text/template" id="admin-device-error-tmpl">
+    <td>
+        <a href="{{ SITE_ROOT }}useradmin/info/<%- email %>/"><%- email %></a>
+    </td>
+    <td><%- peer_ip %>
+    <td><%- peer_name %></td>
+    <td>
+        <a href="{{ SITE_ROOT }}sys/seafadmin/repo/<%- repo_id %>/"><%- repo_name %></a>
+    </td>
+    <td><%- error_con %></td>
+    <td><time title='<%- time %>'><%- time_from_now %></time></td>
 </script>

@@ -9,17 +9,15 @@ define([
 
     var DashboardView = Backbone.View.extend({
 
-        tagName: 'div',
+        id: "admin-dashboard",
+
         template: _.template($("#sysinfo-tmpl").html()),
 
         initialize: function() {
             this.sysinfo = new SysInfo();
         },
 
-        events: {
-        },
-
-        render: function() {
+        showSysinfo: function() {
             var _this = this;
             this.sysinfo.fetch({
                 success: function(model, response, options) {
@@ -42,16 +40,14 @@ define([
         },
 
         hide: function() {
-
+            this.$el.detach();
         },
 
         show: function() {
-            this.render();
+            this.showSysinfo();
         },
 
-
         _showContent: function() {
-            console.log(this.sysinfo.toJSON());
             this.$el.html(this.template(this.sysinfo.toJSON()));
             $("#right-panel").html(this.$el);
             return this;

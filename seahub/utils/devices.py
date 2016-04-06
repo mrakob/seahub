@@ -16,6 +16,22 @@ def _last_sync_time(repos):
     latest_sync_time = max([r['sync_time'] for r in repos])
     return datetime.datetime.fromtimestamp(latest_sync_time)
 
+def get_devices(start, limit):
+    devices = TokenV2.objects.get_devices(start, limit)
+
+    for device in devices:
+        peer_repos_map = get_user_synced_repo_infos(device['user'])
+        if device['platform'] in DESKTOP_PLATFORMS:
+            peer_id = device['device_id']
+            repos = peer_repos_map.get(peer_id, [])
+            device['synced_repos'] = repos
+            if repos:
+                device['last_accessed'] = max(device['last_accessed'],
+                                              _last_sync_time(repos))
+
+        device['last_accessed'] = datetime_to_isoformat_timestr(device['last_accessed'])
+    return devices
+
 def get_user_devices(username):
     devices = TokenV2.objects.get_user_devices(username)
     peer_repos_map = get_user_synced_repo_infos(username)

@@ -28,10 +28,35 @@ class Token(models.Model):
         return self.key
 
 class TokenV2Manager(models.Manager):
+    def get_devices(self, start, limit):
+        '''List devices, most recently used first'''
+        devices = super(TokenV2Manager, self).all()[start : limit]
+
+        platform_priorities = {
+            'windows': 0,
+            'linux': 0,
+            'mac': 0,
+            'android': 1,
+            'ios': 1,
+        }
+
+        def sort_devices(d1, d2):
+            '''Desktop clients are listed before mobile clients. Devices of
+            the same category are listed by most recently used first
+
+            '''
+            ret = cmp(platform_priorities[d1.platform], platform_priorities[d2.platform])
+            if ret != 0:
+                return ret
+
+            return cmp(d2.last_accessed, d1.last_accessed)
+
+        return [ d.as_dict() for d in sorted(devices, sort_devices) ]
+
     def get_user_devices(self, username):
         '''List user devices, most recently used first'''
         devices = super(TokenV2Manager, self).filter(user=username)
-        
+
         platform_priorities = {
             'windows': 0,
             'linux': 0,
